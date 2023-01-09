@@ -25,15 +25,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/urgence/auth")
 public class AuthController {
   @Autowired
   AuthenticationManager authenticationManager;
@@ -120,5 +116,16 @@ public class AuthController {
     userRepository.save(user);
 
     return ResponseEntity.ok(new MessageResponse("Utilisateur enregistré avec succes!"));
+  }
+
+  @PutMapping("modifier/{id}")
+  public User UpdateUser(@RequestBody User user, @PathVariable Long id){
+    User userU =userRepository.findById(id).get();
+
+    userU.setUsername(user.getUsername());
+    userU.setEmail(user.getEmail());
+   // userU.setPassword(encoder.encode((user.getPassword())));
+
+    return userRepository.save(user);
   }
 }

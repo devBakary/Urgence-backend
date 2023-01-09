@@ -17,10 +17,10 @@ public class Entite {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id;
     @Column(unique = true)
-    @NotBlank
+
     private String nom;
 
 
-    @NotBlank
-    private Number numero;
+
+    private String numero;
 }
