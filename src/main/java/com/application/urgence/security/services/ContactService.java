@@ -1,0 +1,17 @@
+package com.application.urgence.security.services;
+
+import com.application.urgence.models.Contact;
+import com.application.urgence.models.Entite;
+
+import java.util.List;
+
+public interface ContactService {
+
+    String creer(Contact contact);
+
+    List<Contact> liste();
+
+    Contact modifier(Contact contact, Long id);
+
+    String supprimer(Long id);
+}
