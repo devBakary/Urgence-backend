@@ -1,9 +1,12 @@
 package com.application.urgence.controllers;
 
 import com.application.urgence.models.Entite;
+import com.application.urgence.models.Notification;
 import com.application.urgence.repository.EntiteRepository;
+import com.application.urgence.repository.NotificationRepository;
 import com.application.urgence.security.FileUploadUtil;
 import com.application.urgence.security.services.EntiteService;
+import com.application.urgence.security.services.NotificationService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -24,6 +27,12 @@ public class EntiteController {
     @Autowired
     EntiteRepository entiteRepository;
 
+    @Autowired
+    NotificationService notificationService;
+
+    @Autowired
+    NotificationRepository notificationRepository;
+
     @PostMapping("/creer")
     public String creer(@Param("nom") String nom, @Param("numero") String numero, @Param("img")MultipartFile img) throws IOException {
 
@@ -35,10 +44,19 @@ public class EntiteController {
                 entite.setImg(imge);
 
         entiteRepository.save(entite);
+        if ( entiteRepository.save(entite)!=null){
+
+            Notification notif = new Notification();
+
+            notif.setMessage("Une nouvelle entite "+ entite.getNom() + " vient d'être créer, le numero est " + entite.getNumero());
+             notificationRepository.save(notif);
+             return "entite creer avec succes!";
+        }
 
         String uploadDir = "C:\\Users\\bddiakite\\Desktop\\urgence-projet\\assets\\images";
         FileUploadUtil.saveFile(uploadDir, imge, img);
         return "enregistrer avec succes";
+
     }
 
     @GetMapping("/liste")
