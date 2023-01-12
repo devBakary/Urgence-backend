@@ -16,11 +16,14 @@ public class Entite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id;
-    @Column(unique = true)
 
+    @Column(unique = true)
     private String nom;
 
-
-
+    @Column(unique = true)
     private String numero;
+
+    private String img;
+
+
 }

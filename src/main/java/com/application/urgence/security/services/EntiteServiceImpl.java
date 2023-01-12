@@ -31,9 +31,10 @@ public class EntiteServiceImpl implements EntiteService{
         Entite entiteU = entiteRepository.findById(id).get();
         entiteU.setNom(entite.getNom());
         entiteU.setNumero(entite.getNumero());
+        entiteU.setImg(entite.getImg());
 
 
-        return entiteRepository.save(entite);
+        return entiteRepository.saveAndFlush(entiteU);
     }
 
     @Override

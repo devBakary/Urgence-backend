@@ -16,7 +16,13 @@ public class Gestes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id;
+    @NotBlank
     private String nom;
+    @NotBlank
     private String description;
-    private String image;
+    @NotBlank
+    private String img1;
+    private String img2;
+    private String img3;
+    private String img4;
 }

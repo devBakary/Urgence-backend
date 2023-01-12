@@ -28,10 +28,18 @@ public class ContactServiceImpl implements ContactService{
     }
 
     @Override
-    public Contact modifier(Contact contact, Long id) {
+    public Contact modifier(Long id, Contact contact) {
 
+        Contact contactU = contactRepository.findById(id).get();
 
-        return null;
+       contactU.setDomicile(contact.getDomicile());
+       contactU.setEmail(contact.getEmail());
+       contactU.setLien(contact.getLien());
+       contactU.setNom(contact.getNom());
+       contactU.setPrenom(contact.getPrenom());
+       contactU.setNumero(contact.getNumero());
+
+       return contactRepository.saveAndFlush(contact);
     }
 
     @Override

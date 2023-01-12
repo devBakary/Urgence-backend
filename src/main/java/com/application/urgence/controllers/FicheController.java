@@ -18,7 +18,12 @@ public class FicheController {
         return "enregistrer avec succes";
     }
 
-    @PostMapping("/liste")
+    @PutMapping("/modifier/{1}")
+    public Fiche modifier(@RequestBody Fiche fiche, @PathVariable Long id){
+        return ficheService.modifier(fiche, id);
+    }
+
+    @GetMapping("/liste")
     public List<Fiche> liste(){
 
         return ficheService.liste();

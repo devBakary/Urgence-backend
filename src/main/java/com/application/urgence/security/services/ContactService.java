@@ -11,7 +11,7 @@ public interface ContactService {
 
     List<Contact> liste();
 
-    Contact modifier(Contact contact, Long id);
+    Contact modifier(Long id, Contact contact);
 
     String supprimer(Long id);
 }

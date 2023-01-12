@@ -23,7 +23,15 @@ public class FicheServiceImpl implements FicheService{
 
     @Override
     public Fiche modifier(Fiche fiche, Long id) {
-        return null;
+        Fiche ficheU = ficheRepository.findById(id).get();
+
+        ficheU.setNom(fiche.getNom());
+        ficheU.setPrenom(fiche.getPrenom());
+        ficheU.setEmail(fiche.getEmail());
+        ficheU.setDomicile(fiche.getDomicile());
+        ficheU.setAllergie(fiche.getAllergie());
+        ficheU.setGroupe(fiche.getGroupe());
+        return ficheRepository.saveAndFlush(ficheU);
     }
 
     @Override

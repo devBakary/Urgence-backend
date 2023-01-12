@@ -22,10 +22,16 @@ public class ContactController {
         return "enregistrer avec succes";
     }
 
-    @PostMapping("/liste")
+    @GetMapping("/liste")
     public List<Contact> liste(){
 
         return contactService.liste();
+    }
+
+    @PutMapping("/modifier/{id}")
+    public Contact modifier(@PathVariable Long id, @RequestBody Contact contact){
+
+        return contactService.modifier(id, contact);
     }
 
 

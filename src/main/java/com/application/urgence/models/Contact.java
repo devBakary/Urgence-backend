@@ -21,7 +21,7 @@ public class Contact {
 
     @NotBlank
     @Column(length = 8)
-    private Number numero;
+    private String numero;
     private String email;
     private String domicile;
     private String lien;
