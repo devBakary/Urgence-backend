@@ -22,7 +22,16 @@ public class Gestes {
     private String description;
     @NotBlank
     private String img1;
+
+    @Column(nullable = true)
     private String img2;
+    @Column(nullable = true)
     private String img3;
+    @Column(nullable = true)
     private String img4;
+
+
+    @ManyToOne
+    @JoinColumn(name = "iduser")
+    private User user;
 }

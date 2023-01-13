@@ -1,5 +1,7 @@
 package com.application.urgence.models;
 
+import lombok.Data;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -8,12 +10,14 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+@Data
 @Entity
 @Table(name = "users", 
     uniqueConstraints = { 
       @UniqueConstraint(columnNames = "username"),
       @UniqueConstraint(columnNames = "email") 
     })
+
 public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,10 +27,17 @@ public class User {
   @Size(max = 20)
   private String username;
 
-  @NotBlank
   @Size(max = 50)
   @Email
   private String email;
+
+
+  @Column(length = 8, nullable = false, unique = true)
+  private Long numero;
+
+  @Column(nullable = true)
+  private String adresse;
+
 
   @NotBlank
   @Size(max = 120)
@@ -41,11 +52,15 @@ public class User {
   public User() {
   }
 
-  public User(String username, String email, String password) {
+  public User(String username, String email, String password, Long numero, String adresse) {
     this.username = username;
     this.email = email;
     this.password = password;
+    this.numero = numero;
+    this.adresse = adresse;
   }
+
+
 
   public Long getId() {
     return id;

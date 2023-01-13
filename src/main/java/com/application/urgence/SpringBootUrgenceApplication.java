@@ -55,7 +55,9 @@ public class SpringBootUrgenceApplication implements CommandLineRunner {
 			User admin = new User(
 					"black",
 					"black@gmail.com",
-					encoder.encode( "12345678"));
+					encoder.encode( "12345678"),
+					90675632L, "aci"
+					);
 			admin.setRoles(roles);
 			userRepository.save(admin);
 

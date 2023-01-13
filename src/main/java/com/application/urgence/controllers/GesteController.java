@@ -1,6 +1,7 @@
 package com.application.urgence.controllers;
 
 import com.application.urgence.models.Gestes;
+import com.application.urgence.models.User;
 import com.application.urgence.repository.GesteRepository;
 import com.application.urgence.security.FileUploadUtil;
 import com.application.urgence.security.services.GesteService;
@@ -26,18 +27,21 @@ public class GesteController {
     @Autowired
     GesteRepository gesteRepository;
 
-    @PostMapping("/creer")
-    public String ajouterGeste(@Param(value = "img1") MultipartFile img1, @RequestParam(value = "img2", required= false ) MultipartFile img2,
+    @PostMapping("/creer/{id}")
+    public String ajouterGeste( @PathVariable Long id, @Param(value = "img1") MultipartFile img1, @RequestParam(value = "img2", required= false ) MultipartFile img2,
                                @RequestParam(value = "img3", required= false ) MultipartFile img3, @RequestParam(value = "img4", required= false )  @Nullable MultipartFile img4,
                                @Param("nom") String nom, @Param("description") String description) throws IOException {
 
 
 
+        User us = gesteService.userParId(id);
+
+        //on verifie si l'id de l'utilisateur est null
+        if (us != null){
             String imge1 = StringUtils.cleanPath(img1.getOriginalFilename());
             String imge2 = StringUtils.cleanPath(img2.getOriginalFilename());
             String imge3 = StringUtils.cleanPath(img3.getOriginalFilename());
             String imge4 = StringUtils.cleanPath(img4.getOriginalFilename());
-
 
             Gestes gestes = new Gestes();
 
@@ -48,6 +52,7 @@ public class GesteController {
             gestes.setImg3(imge3);
             gestes.setImg4(imge4);
 
+            gestes.setUser(us);
             gesteRepository.save(gestes);
 
             String uploadDir = "C:\\Users\\bddiakite\\Desktop\\urgence-projet\\assets\\images";
@@ -57,6 +62,9 @@ public class GesteController {
             FileUploadUtil.saveFile(uploadDir, imge2, img2);
 
             return "success!";
+        }
+
+        return "l'id user est null";
     }
     @DeleteMapping("supprimer/{id}")
     public String supprimer(@PathVariable Long id){

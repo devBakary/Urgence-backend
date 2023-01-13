@@ -5,28 +5,27 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import java.util.Date;
 
 @Entity
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class Entite {
+public class SignalerDanger {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  Long id;
+    private Long id;
+    private Date date = new Date();
+    private Long longitude;
+    private Long latitude;
 
-    @Column(unique = true)
-    private String nom;
 
-    @Column(unique = true)
-    private String numero;
-
-    private String img;
+    @ManyToOne
+    @JoinColumn(name = "entiteid")
+    private Entite entite;
 
     @ManyToOne
     @JoinColumn(name = "iduser")
     private User user;
-
 }

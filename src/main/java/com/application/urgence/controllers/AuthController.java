@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import com.application.urgence.models.ERole;
+import com.application.urgence.models.Entite;
 import com.application.urgence.models.Role;
 import com.application.urgence.models.User;
 import com.application.urgence.payload.request.LoginRequest;
@@ -19,6 +20,7 @@ import com.application.urgence.repository.UserRepository;
 import com.application.urgence.security.jwt.JwtUtils;
 import com.application.urgence.security.services.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -80,7 +82,10 @@ public class AuthController {
     // Creation du comte de l'utilisateur
     User user = new User(signUpRequest.getUsername(),
                signUpRequest.getEmail(),
-               encoder.encode(signUpRequest.getPassword()));
+               encoder.encode(signUpRequest.getPassword()),
+               signUpRequest.getNumero(),
+               signUpRequest.getAdresse()
+               );
 
     Set<String> strRoles = signUpRequest.getRole();
     Set<Role> roles = new HashSet<>();
@@ -119,13 +124,21 @@ public class AuthController {
   }
 
   @PutMapping("modifier/{id}")
-  public User UpdateUser(@RequestBody User user, @PathVariable Long id){
+  public User UpdateUser(@Valid @RequestBody SignupRequest signupRequest, @PathVariable Long id){
     User userU =userRepository.findById(id).get();
 
-    userU.setUsername(user.getUsername());
-    userU.setEmail(user.getEmail());
-   // userU.setPassword(encoder.encode((user.getPassword())));
+    userU.setUsername(signupRequest.getUsername());
+    userU.setEmail(signupRequest.getEmail());
+    userU.setNumero(signupRequest.getNumero());
+    userU.setAdresse(signupRequest.getAdresse());
+    userU.setPassword(encoder.encode((signupRequest.getPassword())));
 
-    return userRepository.save(user);
+    return userRepository.saveAndFlush(userU);
+  }
+
+  @DeleteMapping("/supprimer/{id}")
+  public String supprimer(@PathVariable Long id){
+    userRepository.deleteById(id);
+    return  "supprimé!";
   }
 }

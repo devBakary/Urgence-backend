@@ -25,4 +25,9 @@ public class Contact {
     private String email;
     private String domicile;
     private String lien;
+
+
+    @ManyToOne
+    @JoinColumn(name = "iduser")
+    private User user;
 }
