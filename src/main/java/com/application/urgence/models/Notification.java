@@ -20,4 +20,5 @@ public class Notification {
     private Long id;
     private Date date = new Date();
     private String message;
+    private int etat = 0;
 }

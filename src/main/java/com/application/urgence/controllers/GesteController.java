@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials="true")
 @RestController
 @AllArgsConstructor
 @RequestMapping("urgence/geste")
@@ -29,7 +30,6 @@ public class GesteController {
 
     @PostMapping("/creer/{id}")
     public String ajouterGeste( @PathVariable Long id, @Param(value = "img1") MultipartFile img1, @RequestParam(value = "img2", required= false ) MultipartFile img2,
-                               @RequestParam(value = "img3", required= false ) MultipartFile img3, @RequestParam(value = "img4", required= false )  @Nullable MultipartFile img4,
                                @Param("nom") String nom, @Param("description") String description) throws IOException {
 
 
@@ -40,8 +40,6 @@ public class GesteController {
         if (us != null){
             String imge1 = StringUtils.cleanPath(img1.getOriginalFilename());
             String imge2 = StringUtils.cleanPath(img2.getOriginalFilename());
-            String imge3 = StringUtils.cleanPath(img3.getOriginalFilename());
-            String imge4 = StringUtils.cleanPath(img4.getOriginalFilename());
 
             Gestes gestes = new Gestes();
 
@@ -49,16 +47,12 @@ public class GesteController {
             gestes.setDescription(description);
             gestes.setImg1(imge1);
             gestes.setImg2(imge2);
-            gestes.setImg3(imge3);
-            gestes.setImg4(imge4);
 
             gestes.setUser(us);
             gesteRepository.save(gestes);
 
             String uploadDir = "C:\\Users\\bddiakite\\Desktop\\urgence-projet\\assets\\images";
             FileUploadUtil.saveFile(uploadDir, imge1, img1);
-            FileUploadUtil.saveFile(uploadDir, imge2, img2);
-            FileUploadUtil.saveFile(uploadDir, imge3, img3);
             FileUploadUtil.saveFile(uploadDir, imge2, img2);
 
             return "success!";

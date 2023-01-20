@@ -35,7 +35,7 @@ public class User {
   @Column(length = 8, nullable = false, unique = true)
   private Long numero;
 
-  @Column(nullable = true)
+
   private String adresse;
 
 

@@ -2,10 +2,12 @@ package com.application.urgence.controllers;
 
 import com.application.urgence.models.Entite;
 import com.application.urgence.models.Notification;
+import com.application.urgence.models.User;
 import com.application.urgence.repository.EntiteRepository;
 import com.application.urgence.repository.NotificationRepository;
 import com.application.urgence.security.FileUploadUtil;
 import com.application.urgence.security.services.EntiteService;
+import com.application.urgence.security.services.GesteService;
 import com.application.urgence.security.services.NotificationService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials="true")
 @RestController
 @RequestMapping("/urgence/entite")
 public class EntiteController {
@@ -33,8 +36,13 @@ public class EntiteController {
     @Autowired
     NotificationRepository notificationRepository;
 
-    @PostMapping("/creer")
-    public String creer(@Param("nom") String nom, @Param("numero") String numero, @Param("img")MultipartFile img) throws IOException {
+    @Autowired
+    GesteService gesteService;
+
+    @PostMapping("/creer/{id}")
+    public String creer(@PathVariable Long id, @Param("nom") String nom, @Param("numero") String numero, @Param("img")MultipartFile img) throws IOException {
+
+        User us = gesteService.userParId(id);
 
         String imge = StringUtils.cleanPath(img.getOriginalFilename());
 
@@ -43,6 +51,7 @@ public class EntiteController {
                 entite.setNumero(numero);
                 entite.setImg(imge);
 
+                entite.setUser(us);
         entiteRepository.save(entite);
         if ( entiteRepository.save(entite)!=null){
 
@@ -64,6 +73,28 @@ public class EntiteController {
 
         return entiteService.liste();
     }
+
+    //liste de notif
+    @GetMapping("/listeNotif")
+    public List<Notification> listes(){
+
+        return notificationRepository.findAll();
+    }
+    //liste de notif non lu
+        @GetMapping("/listeNotification")
+        public List<Notification> listeNotification(){
+
+        return notificationRepository.listeNotif();
+    }
+
+    //modification de la notif
+    @PutMapping("/update/{id}")
+    public Notification updateNotif(@PathVariable Long id){
+        Notification uNotif = notificationRepository.findById(id).get();
+        uNotif.setEtat(1);
+        return notificationRepository.saveAndFlush(uNotif);
+    }
+
 
     @PutMapping("/modifier/{id}")
     public Entite modifier(@Param("nom") String nom, @Param("numero") String numero, @Param("img") MultipartFile img, @PathVariable Long id) throws IOException {
