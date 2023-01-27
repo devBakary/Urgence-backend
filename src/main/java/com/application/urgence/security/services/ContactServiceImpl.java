@@ -2,6 +2,7 @@ package com.application.urgence.security.services;
 
 import com.application.urgence.models.Contact;
 import com.application.urgence.models.Entite;
+import com.application.urgence.models.User;
 import com.application.urgence.repository.ContactRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +17,18 @@ public class ContactServiceImpl implements ContactService{
     @Autowired
     ContactRepository contactRepository;
 
+    @Autowired
+    GesteService gesteService;
+
     @Override
     public String creer(Contact contact) {
       contactRepository.save(contact);
       return "bien enregister";
     }
 
-    @Override
-    public List<Contact> liste() {
-        return contactRepository.findAll();
-    }
+
+
+
 
     @Override
     public Contact modifier(Long id, Contact contact) {

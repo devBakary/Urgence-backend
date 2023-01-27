@@ -9,7 +9,7 @@ public interface ContactService {
 
     String creer(Contact contact);
 
-    List<Contact> liste();
+
 
     Contact modifier(Long id, Contact contact);
 

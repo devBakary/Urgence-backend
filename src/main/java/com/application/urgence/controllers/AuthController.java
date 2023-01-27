@@ -71,6 +71,7 @@ public class AuthController {
                          roles));
   }
 
+  // pour le user
   @PostMapping("/inscription")
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
@@ -126,6 +127,7 @@ public class AuthController {
   }
 
 
+  //Pour le responsable
   @PostMapping("/inscrire")
   public ResponseEntity<?> registerRespon(@Valid @RequestBody SignupRequest signUpRequest) {
     if (
