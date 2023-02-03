@@ -2,9 +2,13 @@ package com.application.urgence.security.services;
 
 import com.application.urgence.models.Fiche;
 import com.application.urgence.repository.FicheRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
+@AllArgsConstructor
 public class FicheServiceImpl implements FicheService{
 
 

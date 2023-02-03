@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials="true")
@@ -60,9 +61,20 @@ public class GesteController {
 
         return "l'id user est null";
     }
-    @DeleteMapping("supprimer/{id}")
+    @DeleteMapping("/supprimer/{id}")
     public String supprimer(@PathVariable Long id){
         gesteRepository.deleteById(id);
         return "supprimer avec succes!";
     }
+
+    @GetMapping("/afficher")
+    public List<Gestes> affichage(){
+        return gesteRepository.findAll();
+    }
+
+    @GetMapping("/liste/{id}")
+    public List<Gestes> affichageliste(@PathVariable Long id){
+        return gesteRepository.listeGeste(id);
+    }
+
 }
