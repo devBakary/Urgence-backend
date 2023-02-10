@@ -17,8 +17,8 @@ public class SignalerDanger {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Date date = new Date();
-    private Long longitude;
-    private Long latitude;
+    private double longitude;
+    private double latitude;
 
 
     @ManyToOne

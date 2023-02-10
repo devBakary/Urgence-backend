@@ -19,7 +19,8 @@ public class Fiche {
     private String nom;
     private String prenom;
     private String email;
-    private String domicile;
+    private String adresse;
+    private Long numero;
     private String allergie;
     private String groupe;
 

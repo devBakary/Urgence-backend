@@ -2,9 +2,13 @@ package com.application.urgence.security.services;
 
 import com.application.urgence.models.Fiche;
 import com.application.urgence.repository.FicheRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
+@AllArgsConstructor
 public class FicheServiceImpl implements FicheService{
 
 
@@ -24,11 +28,10 @@ public class FicheServiceImpl implements FicheService{
     @Override
     public Fiche modifier(Fiche fiche, Long id) {
         Fiche ficheU = ficheRepository.findById(id).get();
-
         ficheU.setNom(fiche.getNom());
         ficheU.setPrenom(fiche.getPrenom());
         ficheU.setEmail(fiche.getEmail());
-        ficheU.setDomicile(fiche.getDomicile());
+        ficheU.setAdresse(fiche.getAdresse());
         ficheU.setAllergie(fiche.getAllergie());
         ficheU.setGroupe(fiche.getGroupe());
         return ficheRepository.saveAndFlush(ficheU);
