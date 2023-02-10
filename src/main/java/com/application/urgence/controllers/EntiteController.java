@@ -59,11 +59,12 @@ public class EntiteController {
 
             notif.setMessage("Une nouvelle entite "+ entite.getNom() + " vient d'être créer, le numero est " + entite.getNumero());
              notificationRepository.save(notif);
+            String uploadDir = "C:\\Users\\bddiakite\\Desktop\\urgence-projet\\assets\\images";
+            FileUploadUtil.saveFile(uploadDir, imge, img);
              return "entite creer avec succes!";
         }
 
-        String uploadDir = "C:\\Users\\bddiakite\\Desktop\\urgence-projet\\assets\\images";
-        FileUploadUtil.saveFile(uploadDir, imge, img);
+
         return "enregistrer avec succes";
 
     }

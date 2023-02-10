@@ -3,6 +3,7 @@ package com.application.urgence.controllers;
 import com.application.urgence.models.Entite;
 import com.application.urgence.models.Fiche;
 import com.application.urgence.models.User;
+import com.application.urgence.repository.FicheRepository;
 import com.application.urgence.security.services.FicheService;
 import com.application.urgence.security.services.GesteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class FicheController {
     FicheService ficheService;
 
     @Autowired
+    FicheRepository ficheRepository;
+
+    @Autowired
     GesteService gesteService;
 
     @PostMapping("/creer/{id}")
@@ -35,10 +39,10 @@ public class FicheController {
         return ficheService.modifier(fiche, id);
     }
 
-    @GetMapping("/liste")
-    public List<Fiche> liste(){
+    @GetMapping("/liste/{id}")
+    public List<Fiche> liste(@PathVariable Long id){
 
-        return ficheService.liste();
+        return ficheRepository.listeFiche(id);
     }
 
     @DeleteMapping("/delete/{id}")

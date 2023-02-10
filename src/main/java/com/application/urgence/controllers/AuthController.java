@@ -7,14 +7,12 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import com.application.urgence.models.ERole;
-import com.application.urgence.models.Entite;
-import com.application.urgence.models.Role;
-import com.application.urgence.models.User;
+import com.application.urgence.models.*;
 import com.application.urgence.payload.request.LoginRequest;
 import com.application.urgence.payload.request.SignupRequest;
 import com.application.urgence.payload.response.JwtResponse;
 import com.application.urgence.payload.response.MessageResponse;
+import com.application.urgence.repository.FicheRepository;
 import com.application.urgence.repository.RoleRepository;
 import com.application.urgence.repository.UserRepository;
 import com.application.urgence.security.jwt.JwtUtils;
@@ -41,6 +39,9 @@ public class AuthController {
 
   @Autowired
   RoleRepository roleRepository;
+
+  @Autowired
+  FicheRepository ficheRepository;
 
   @Autowired
   PasswordEncoder encoder;
@@ -120,8 +121,16 @@ public class AuthController {
       });
     }
 
+    Fiche fiche = new Fiche();
+    fiche.setEmail(signUpRequest.getEmail());
+    fiche.setAdresse(signUpRequest.getAdresse());
+    fiche.setNumero(user.getNumero());
+
+
     user.setRoles(roles);
     userRepository.save(user);
+    fiche.setUser(user);
+    ficheRepository.save(fiche);
 
     return ResponseEntity.ok(new MessageResponse("Utilisateur enregistré avec succes!"));
   }
@@ -154,6 +163,8 @@ public class AuthController {
       Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
           .orElseThrow(() -> new RuntimeException("Error: Role non trouvé"));
       roles.add(adminRole);
+      System.out.println("la ficheeeeeeeeee");
+
 
     user.setRoles(roles);
     userRepository.save(user);
