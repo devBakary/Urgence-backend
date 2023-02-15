@@ -78,7 +78,13 @@ public class AuthController {
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
       return ResponseEntity
               .badRequest()
-              .body(new MessageResponse("Error: Cet utilisateur existe deja!"));
+              .body("Cet utilisateur existe deja! Choisissez un autre");
+    }else if (signUpRequest.getEmail() != null && userRepository.existsByEmail(signUpRequest.getEmail())){
+      return ResponseEntity.badRequest()
+              .body("Cet Email est deja utilisé");
+    }else if(userRepository.existsByNumero(signUpRequest.getNumero())){
+      return ResponseEntity.badRequest()
+              .body("Cet Numero a deja un compte");
     }
 
 
@@ -132,7 +138,7 @@ public class AuthController {
     fiche.setUser(user);
     ficheRepository.save(fiche);
 
-    return ResponseEntity.ok(new MessageResponse("Utilisateur enregistré avec succes!"));
+    return ResponseEntity.ok().body(" Utilisateur enregistré avec succes!");
   }
 
 
