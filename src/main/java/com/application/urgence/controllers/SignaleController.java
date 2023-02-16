@@ -13,6 +13,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials="true")
 @RestController
 @AllArgsConstructor
@@ -45,6 +47,11 @@ public class SignaleController {
         notif.setMessage("Un nouveau signale de "+ signalerDanger.getEntite().getNom() + " en provenance de  " + signalerDanger.getUser().getNumero() + " à l'adresse " + signalerDanger.getUser().getAdresse());
         notificationRepository.save(notif);
         return signaleService.ajouter(signalerDanger);
+    }
+
+    @GetMapping("/liste")
+    public List<SignalerDanger> liste(){
+        return signaleRepository.findAll();
     }
 
     @DeleteMapping("/supprimer/{id}")

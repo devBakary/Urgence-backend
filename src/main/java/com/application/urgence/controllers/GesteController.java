@@ -30,7 +30,7 @@ public class GesteController {
     GesteRepository gesteRepository;
 
     @PostMapping("/creer/{id}")
-    public String ajouterGeste( @PathVariable Long id, @Param(value = "img1") MultipartFile img1, @RequestParam(value = "img2", required= false ) MultipartFile img2,
+    public String ajouterGeste( @PathVariable Long id, @Param(value = "img1") MultipartFile img1, @Param("lien") String lien,
                                @Param("nom") String nom, @Param("description") String description) throws IOException {
 
 
@@ -39,22 +39,20 @@ public class GesteController {
 
         //on verifie si l'id de l'utilisateur est null
         if (us != null){
-            String imge1 = StringUtils.cleanPath(img1.getOriginalFilename());
-            String imge2 = StringUtils.cleanPath(img2.getOriginalFilename());
+            String imge1 = id +img1.getOriginalFilename();
 
             Gestes gestes = new Gestes();
 
             gestes.setNom(nom);
             gestes.setDescription(description);
             gestes.setImg1(imge1);
-            gestes.setImg2(imge2);
+            gestes.setLien(lien);
 
             gestes.setUser(us);
             gesteRepository.save(gestes);
 
             String uploadDir = "C:\\Users\\bddiakite\\Desktop\\urgence-projet\\assets\\images";
             FileUploadUtil.saveFile(uploadDir, imge1, img1);
-            FileUploadUtil.saveFile(uploadDir, imge2, img2);
 
             return "success!";
         }

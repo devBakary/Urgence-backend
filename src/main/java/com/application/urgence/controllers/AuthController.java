@@ -182,6 +182,8 @@ public class AuthController {
   public User UpdateUser(@Valid @RequestBody SignupRequest signupRequest, @PathVariable Long id){
     User userU =userRepository.findById(id).get();
 
+
+
     userU.setUsername(signupRequest.getUsername());
     userU.setEmail(signupRequest.getEmail());
     userU.setNumero(signupRequest.getNumero());
@@ -200,6 +202,12 @@ public class AuthController {
   @GetMapping("/liste")
   public List<User> listeUser(){
     return userRepository.findAll();
+  }
+
+  @GetMapping("/liste/{id}")
+  public List<User> listeU(@PathVariable Long id){
+    User is = userRepository.findById(id).get();
+    return userRepository.list(id);
   }
 
   @GetMapping("/rliste")

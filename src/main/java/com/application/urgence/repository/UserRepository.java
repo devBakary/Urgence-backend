@@ -1,5 +1,6 @@
 package com.application.urgence.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,7 +17,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
   Boolean existsByEmail(String email);
   Boolean existsByNumero(Long numero);
 
+  //List<User> findUserById(Long id);
+
   @Query(value="select * from users where username = ?", nativeQuery = true)
   public User findUsername(String username);
+
+  @Query(value="select * from users where id = ?", nativeQuery = true)
+  public List<User> list(Long id);
+
 
 }
