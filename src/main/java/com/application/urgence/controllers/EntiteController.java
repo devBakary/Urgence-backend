@@ -11,6 +11,7 @@ import com.application.urgence.security.services.GesteService;
 import com.application.urgence.security.services.NotificationService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -83,7 +84,7 @@ public class EntiteController {
     @GetMapping("/listeNotif")
     public List<Notification> listes(){
 
-        return notificationRepository.findAll();
+        return notificationRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
     }
     //liste de notif non lu
         @GetMapping("/listeNotification")

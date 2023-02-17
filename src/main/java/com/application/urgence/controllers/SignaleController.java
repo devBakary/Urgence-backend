@@ -11,6 +11,7 @@ import com.application.urgence.security.services.GesteService;
 import com.application.urgence.security.services.SignaleService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,7 +52,7 @@ public class SignaleController {
 
     @GetMapping("/liste")
     public List<SignalerDanger> liste(){
-        return signaleRepository.findAll();
+        return signaleRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
     }
 
     @DeleteMapping("/supprimer/{id}")

@@ -19,6 +19,7 @@ import com.application.urgence.security.jwt.JwtUtils;
 import com.application.urgence.security.services.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -183,14 +184,26 @@ public class AuthController {
     User userU =userRepository.findById(id).get();
 
 
+    if (signupRequest != null) {
+      if (signupRequest.getUsername() != null) {
+        userU.setUsername(signupRequest.getUsername());
+      }
+      if (signupRequest.getEmail() != null) {
+        userU.setEmail(signupRequest.getEmail());
+      }
+      if (signupRequest.getNumero() != null) {
+        userU.setNumero(signupRequest.getNumero());
+      }
+      if (signupRequest.getAdresse() != null) {
+        userU.setAdresse(signupRequest.getAdresse());
+      }
+      if (signupRequest.getPassword() != null) {
+        userU.setPassword(encoder.encode(signupRequest.getPassword()));
+      }
+    }
 
-    userU.setUsername(signupRequest.getUsername());
-    userU.setEmail(signupRequest.getEmail());
-    userU.setNumero(signupRequest.getNumero());
-    userU.setAdresse(signupRequest.getAdresse());
-    userU.setPassword(encoder.encode((signupRequest.getPassword())));
 
-    return userRepository.saveAndFlush(userU);
+    return userRepository.save(userU);
   }
 
   @DeleteMapping("/supprimer/{id}")
@@ -201,7 +214,7 @@ public class AuthController {
 
   @GetMapping("/liste")
   public List<User> listeUser(){
-    return userRepository.findAll();
+    return userRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
   }
 
   @GetMapping("/liste/{id}")
