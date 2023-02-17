@@ -1,5 +1,6 @@
 package com.application.urgence.controllers;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,16 +19,21 @@ import com.application.urgence.repository.UserRepository;
 import com.application.urgence.security.EmailConstructor;
 import com.application.urgence.security.jwt.JwtUtils;
 import com.application.urgence.security.services.UserDetailsImpl;
+import com.application.urgence.security.services.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials="true")
@@ -58,6 +64,12 @@ public class AuthController {
 
   @Autowired
   JwtUtils jwtUtils;
+
+  @Autowired
+  UserService userService;
+
+  @Autowired
+  BCryptPasswordEncoder bCryptPasswordEncoder;
 
   @PostMapping("/connexion")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -245,6 +257,55 @@ public class AuthController {
   @GetMapping("/user/{username}")
   public User afficherparUsername(@PathVariable String username) {
     return userRepository.findUsername(username);
+  }
+
+
+
+
+  //mot de passe oublié
+  @GetMapping("/resetpassword/{email}")
+  public ResponseEntity<String> resetPassword(@PathVariable("email") String email) {
+    User user = userRepository.findByEmail(email);
+    if (user == null) {
+      return new ResponseEntity<String>("Email non fourni", HttpStatus.BAD_REQUEST);
+    }
+    userService.resetPassword(user);
+    return new ResponseEntity<String>("Email envoyé!", HttpStatus.OK);
+  }
+
+  //reinitialiser password
+  @PostMapping("/changePassword/{email}")
+  public ResponseEntity<String> changePassword(@RequestBody HashMap<String, String> request, @PathVariable String email) {
+    //String numeroOrEmail = request.get("numeroOrEmail");
+    User user = userRepository.findByEmail(email);
+    if (user == null) {
+      return new ResponseEntity<>("Utilisateur non fourni!", HttpStatus.BAD_REQUEST);
+    }
+    String currentPassword = request.get("currentpassword");
+
+    String newPassword = request.get("newpassword");
+    String confirmpassword = request.get("confirmpassword");
+    if (!newPassword.equals(confirmpassword)) {
+      return new ResponseEntity<>("PasswordNotMatched", HttpStatus.BAD_REQUEST);
+    }
+    String userPassword = user.getPassword();
+    System.out.println(userPassword + "shnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn" );
+
+    try {
+      if (newPassword != null && !newPassword.isEmpty() && !StringUtils.isEmpty(newPassword)) {
+        if (bCryptPasswordEncoder.matches(currentPassword, userPassword)) {
+          System.out.println(currentPassword +" " + userPassword +" notre vericationnnnnnnnnnnnn");
+          userService.updateUserPassword(user, newPassword);
+
+
+        }
+      } else {
+        return new ResponseEntity<>("IncorrectCurrentPassword", HttpStatus.BAD_REQUEST);
+      }
+      return new ResponseEntity<>("Mot de passe changé avec succès!", HttpStatus.OK);
+    } catch (Exception e) {
+      return new ResponseEntity<>("Error Occured: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
   }
 
 }
