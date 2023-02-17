@@ -15,12 +15,14 @@ import com.application.urgence.payload.response.MessageResponse;
 import com.application.urgence.repository.FicheRepository;
 import com.application.urgence.repository.RoleRepository;
 import com.application.urgence.repository.UserRepository;
+import com.application.urgence.security.EmailConstructor;
 import com.application.urgence.security.jwt.JwtUtils;
 import com.application.urgence.security.services.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,6 +34,13 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/urgence/auth")
 public class AuthController {
+
+  @Autowired
+  private EmailConstructor emailConstructor;
+
+  @Autowired
+  private JavaMailSender mailSender;
+
   @Autowired
   AuthenticationManager authenticationManager;
 
@@ -175,6 +184,7 @@ public class AuthController {
 
     user.setRoles(roles);
     userRepository.save(user);
+    mailSender.send(emailConstructor.constructNewUserEmail(user));
 
     return ResponseEntity.ok(new MessageResponse("Responsable enregistré avec succes!"));
   }
@@ -187,6 +197,9 @@ public class AuthController {
     if (signupRequest != null) {
       if (signupRequest.getUsername() != null) {
         userU.setUsername(signupRequest.getUsername());
+      }
+      else{
+        userU.setUsername(userU.getUsername());
       }
       if (signupRequest.getEmail() != null) {
         userU.setEmail(signupRequest.getEmail());
