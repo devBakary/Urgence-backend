@@ -263,49 +263,49 @@ public class AuthController {
 
 
   //mot de passe oublié
-  @GetMapping("/resetpassword/{email}")
-  public ResponseEntity<String> resetPassword(@PathVariable("email") String email) {
-    User user = userRepository.findByEmail(email);
+  @PostMapping("/resetpassword")
+  public ResponseEntity<String> resetPassword(@RequestBody User users) {
+    User user = userRepository.findUsername(users.getUsername());
+    System.out.println(user);
     if (user == null) {
-      return new ResponseEntity<String>("Email non fourni", HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<String>("Username introuvable !", HttpStatus.BAD_REQUEST);
+    }
+    if(user.getEmail() == null ){
+      return new ResponseEntity<String>("Mail introuvable !", HttpStatus.BAD_REQUEST);
     }
     userService.resetPassword(user);
-    return new ResponseEntity<String>("Email envoyé!", HttpStatus.OK);
+    return new ResponseEntity<String>("Mail envoyé !", HttpStatus.OK);
   }
 
   //reinitialiser password
-  @PostMapping("/changePassword/{email}")
-  public ResponseEntity<String> changePassword(@RequestBody HashMap<String, String> request, @PathVariable String email) {
+  @PostMapping("/changePassword/{username}")
+  public ResponseEntity<String> changePassword(@RequestBody HashMap<String, String> request, @PathVariable String username) {
     //String numeroOrEmail = request.get("numeroOrEmail");
-    User user = userRepository.findByEmail(email);
+    User user = userRepository.findUsername(username);
     if (user == null) {
-      return new ResponseEntity<>("Utilisateur non fourni!", HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>("Utilisateur introuvable !", HttpStatus.BAD_REQUEST);
     }
     String currentPassword = request.get("currentpassword");
 
     String newPassword = request.get("newpassword");
     String confirmpassword = request.get("confirmpassword");
     if (!newPassword.equals(confirmpassword)) {
-      return new ResponseEntity<>("PasswordNotMatched", HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>(" Les mots de passe ne correspondent pas !", HttpStatus.BAD_REQUEST);
     }
     String userPassword = user.getPassword();
-    System.out.println(userPassword + "shnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn" );
+    //System.out.println(userPassword + "shnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn" );
 
-    try {
+
       if (newPassword != null && !newPassword.isEmpty() && !StringUtils.isEmpty(newPassword)) {
         if (bCryptPasswordEncoder.matches(currentPassword, userPassword)) {
-          System.out.println(currentPassword +" " + userPassword +" notre vericationnnnnnnnnnnnn");
+         // System.out.println(currentPassword +" " + userPassword +" notre vericationnnnnnnnnnnnn");
           userService.updateUserPassword(user, newPassword);
 
-
+          return new ResponseEntity<>(" Mot de passe changé avec succès !", HttpStatus.OK);
         }
-      } else {
-        return new ResponseEntity<>("IncorrectCurrentPassword", HttpStatus.BAD_REQUEST);
       }
-      return new ResponseEntity<>("Mot de passe changé avec succès!", HttpStatus.OK);
-    } catch (Exception e) {
-      return new ResponseEntity<>("Error Occured: " + e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
+        return new ResponseEntity<>(" Incorrect Mot de passe !", HttpStatus.BAD_REQUEST);
+
   }
 
 }
