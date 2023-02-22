@@ -271,10 +271,10 @@ public class AuthController {
       return new ResponseEntity<String>("Username introuvable !", HttpStatus.BAD_REQUEST);
     }
     if(user.getEmail() == null ){
-      return new ResponseEntity<String>("Mail introuvable !", HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<String>("Nous n'avons pas trouvé de mail correspondant pour cet username !", HttpStatus.BAD_REQUEST);
     }
     userService.resetPassword(user);
-    return new ResponseEntity<String>("Mail envoyé !", HttpStatus.OK);
+    return new ResponseEntity<String>(users.getUsername(), HttpStatus.OK);
   }
 
   //reinitialiser password
