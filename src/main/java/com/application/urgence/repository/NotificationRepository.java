@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-    @Query(value="select * from notification where etat = 0", nativeQuery = true)
+    @Query(value="select * from notification where etat = 0 ORDER BY id DESC ", nativeQuery = true)
     List<Notification> listeNotif();
 }

@@ -11,6 +11,7 @@ import com.application.urgence.security.services.GesteService;
 import com.application.urgence.security.services.NotificationService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -40,16 +41,18 @@ public class EntiteController {
     GesteService gesteService;
 
     @PostMapping("/creer/{id}")
-    public String creer(@PathVariable Long id, @Param("nom") String nom, @Param("numero") String numero, @Param("img")MultipartFile img) throws IOException {
+    public String creer(@PathVariable Long id, @Param("nom") String nom, @Param("numero") String numero, @Param("img")MultipartFile img, @Param("audio") MultipartFile audio) throws IOException {
 
         User us = gesteService.userParId(id);
 
-        String imge = StringUtils.cleanPath(img.getOriginalFilename());
+        String imge = nom +img.getOriginalFilename();
+        String audi = nom +img.getOriginalFilename();
 
         Entite entite = new Entite();
                 entite.setNom(nom);
                 entite.setNumero(numero);
                 entite.setImg(imge);
+                entite.setAudio(audi);
 
                 entite.setUser(us);
         entiteRepository.save(entite);
@@ -60,7 +63,9 @@ public class EntiteController {
             notif.setMessage("Une nouvelle entite "+ entite.getNom() + " vient d'être créer, le numero est " + entite.getNumero());
              notificationRepository.save(notif);
             String uploadDir = "C:\\Users\\bddiakite\\Desktop\\urgence-projet\\assets\\images";
+            String upload = "C:\\Users\\bddiakite\\Desktop\\urgence-projet\\assets\\audios";
             FileUploadUtil.saveFile(uploadDir, imge, img);
+            FileUploadUtil.saveFile(upload, audi, audio);
              return "entite creer avec succes!";
         }
 
@@ -79,7 +84,7 @@ public class EntiteController {
     @GetMapping("/listeNotif")
     public List<Notification> listes(){
 
-        return notificationRepository.findAll();
+        return notificationRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
     }
     //liste de notif non lu
         @GetMapping("/listeNotification")

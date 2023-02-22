@@ -24,6 +24,7 @@ public class Entite {
     private String numero;
 
     private String img;
+    private String audio;
 
     @ManyToOne
     @JoinColumn(name = "iduser")

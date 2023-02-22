@@ -1,5 +1,6 @@
 package com.application.urgence.controllers;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,22 +16,37 @@ import com.application.urgence.payload.response.MessageResponse;
 import com.application.urgence.repository.FicheRepository;
 import com.application.urgence.repository.RoleRepository;
 import com.application.urgence.repository.UserRepository;
+import com.application.urgence.security.EmailConstructor;
 import com.application.urgence.security.jwt.JwtUtils;
 import com.application.urgence.security.services.UserDetailsImpl;
+import com.application.urgence.security.services.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials="true")
 @RestController
 @RequestMapping("/urgence/auth")
 public class AuthController {
+
+  @Autowired
+  private EmailConstructor emailConstructor;
+
+  @Autowired
+  private JavaMailSender mailSender;
+
   @Autowired
   AuthenticationManager authenticationManager;
 
@@ -48,6 +64,12 @@ public class AuthController {
 
   @Autowired
   JwtUtils jwtUtils;
+
+  @Autowired
+  UserService userService;
+
+  @Autowired
+  BCryptPasswordEncoder bCryptPasswordEncoder;
 
   @PostMapping("/connexion")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -78,7 +100,13 @@ public class AuthController {
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
       return ResponseEntity
               .badRequest()
-              .body(new MessageResponse("Error: Cet utilisateur existe deja!"));
+              .body("Cet utilisateur existe deja! Choisissez un autre");
+    }else if (signUpRequest.getEmail() != null && userRepository.existsByEmail(signUpRequest.getEmail())){
+      return ResponseEntity.badRequest()
+              .body("Cet Email est deja utilisé");
+    }else if(userRepository.existsByNumero(signUpRequest.getNumero())){
+      return ResponseEntity.badRequest()
+              .body("Cet Numero a deja un compte");
     }
 
 
@@ -132,7 +160,7 @@ public class AuthController {
     fiche.setUser(user);
     ficheRepository.save(fiche);
 
-    return ResponseEntity.ok(new MessageResponse("Utilisateur enregistré avec succes!"));
+    return ResponseEntity.ok().body(" Utilisateur enregistré avec succes!");
   }
 
 
@@ -168,6 +196,7 @@ public class AuthController {
 
     user.setRoles(roles);
     userRepository.save(user);
+    mailSender.send(emailConstructor.constructNewUserEmail(user));
 
     return ResponseEntity.ok(new MessageResponse("Responsable enregistré avec succes!"));
   }
@@ -176,13 +205,30 @@ public class AuthController {
   public User UpdateUser(@Valid @RequestBody SignupRequest signupRequest, @PathVariable Long id){
     User userU =userRepository.findById(id).get();
 
-    userU.setUsername(signupRequest.getUsername());
-    userU.setEmail(signupRequest.getEmail());
-    userU.setNumero(signupRequest.getNumero());
-    userU.setAdresse(signupRequest.getAdresse());
-    userU.setPassword(encoder.encode((signupRequest.getPassword())));
 
-    return userRepository.saveAndFlush(userU);
+    if (signupRequest != null) {
+      if (signupRequest.getUsername() != null) {
+        userU.setUsername(signupRequest.getUsername());
+      }
+      else{
+        userU.setUsername(userU.getUsername());
+      }
+      if (signupRequest.getEmail() != null) {
+        userU.setEmail(signupRequest.getEmail());
+      }
+      if (signupRequest.getNumero() != null) {
+        userU.setNumero(signupRequest.getNumero());
+      }
+      if (signupRequest.getAdresse() != null) {
+        userU.setAdresse(signupRequest.getAdresse());
+      }
+      if (signupRequest.getPassword() != null) {
+        userU.setPassword(encoder.encode(signupRequest.getPassword()));
+      }
+    }
+
+
+    return userRepository.save(userU);
   }
 
   @DeleteMapping("/supprimer/{id}")
@@ -193,7 +239,13 @@ public class AuthController {
 
   @GetMapping("/liste")
   public List<User> listeUser(){
-    return userRepository.findAll();
+    return userRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+  }
+
+  @GetMapping("/liste/{id}")
+  public List<User> listeU(@PathVariable Long id){
+    User is = userRepository.findById(id).get();
+    return userRepository.list(id);
   }
 
   @GetMapping("/rliste")
@@ -205,6 +257,55 @@ public class AuthController {
   @GetMapping("/user/{username}")
   public User afficherparUsername(@PathVariable String username) {
     return userRepository.findUsername(username);
+  }
+
+
+
+
+  //mot de passe oublié
+  @PostMapping("/resetpassword")
+  public ResponseEntity<String> resetPassword(@RequestBody User users) {
+    User user = userRepository.findUsername(users.getUsername());
+    System.out.println(user);
+    if (user == null) {
+      return new ResponseEntity<String>("Username introuvable !", HttpStatus.BAD_REQUEST);
+    }
+    if(user.getEmail() == null ){
+      return new ResponseEntity<String>("Nous n'avons pas trouvé de mail correspondant pour cet username !", HttpStatus.BAD_REQUEST);
+    }
+    userService.resetPassword(user);
+    return new ResponseEntity<String>(users.getUsername(), HttpStatus.OK);
+  }
+
+  //reinitialiser password
+  @PostMapping("/changePassword/{username}")
+  public ResponseEntity<String> changePassword(@RequestBody HashMap<String, String> request, @PathVariable String username) {
+    //String numeroOrEmail = request.get("numeroOrEmail");
+    User user = userRepository.findUsername(username);
+    if (user == null) {
+      return new ResponseEntity<>("Utilisateur introuvable !", HttpStatus.BAD_REQUEST);
+    }
+    String currentPassword = request.get("currentpassword");
+
+    String newPassword = request.get("newpassword");
+    String confirmpassword = request.get("confirmpassword");
+    if (!newPassword.equals(confirmpassword)) {
+      return new ResponseEntity<>(" Les mots de passe ne correspondent pas !", HttpStatus.BAD_REQUEST);
+    }
+    String userPassword = user.getPassword();
+    //System.out.println(userPassword + "shnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn" );
+
+
+      if (newPassword != null && !newPassword.isEmpty() && !StringUtils.isEmpty(newPassword)) {
+        if (bCryptPasswordEncoder.matches(currentPassword, userPassword)) {
+         // System.out.println(currentPassword +" " + userPassword +" notre vericationnnnnnnnnnnnn");
+          userService.updateUserPassword(user, newPassword);
+
+          return new ResponseEntity<>(" Mot de passe changé avec succès !", HttpStatus.OK);
+        }
+      }
+        return new ResponseEntity<>(" Incorrect Mot de passe !", HttpStatus.BAD_REQUEST);
+
   }
 
 }

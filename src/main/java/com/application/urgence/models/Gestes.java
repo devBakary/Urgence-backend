@@ -23,12 +23,7 @@ public class Gestes {
     @NotBlank
     private String img1;
 
-    @Column(nullable = true)
-    private String img2;
-    @Column(nullable = true)
-    private String img3;
-    @Column(nullable = true)
-    private String img4;
+    private String lien;
 
 
     @ManyToOne
