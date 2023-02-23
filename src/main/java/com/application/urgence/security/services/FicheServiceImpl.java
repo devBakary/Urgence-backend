@@ -28,19 +28,22 @@ public class FicheServiceImpl implements FicheService{
     @Override
     public Fiche modifier(Fiche fiche, Long id) {
         Fiche ficheU = ficheRepository.findById(id).get();
-        if(fiche.getNom() != null || !fiche.getNom().isEmpty()) {
+        if(!fiche.getNom().trim().equals("")) {
             ficheU.setNom(fiche.getNom());
         }
+        if(!fiche.getPrenom().trim().equals("")){
+            ficheU.setPrenom(fiche.getPrenom());
+        }
+        if (!fiche.getAdresse().trim().equals("")){
+            ficheU.setAdresse(fiche.getAdresse());
+        }
+        if(!fiche.getGroupe().trim().equals("")){
+            ficheU.setGroupe(fiche.getGroupe());
+        }
+        if (!fiche.getAllergie().trim().equals("")){
+            ficheU.setAllergie(fiche.getAllergie());
+        }
 
-        else if(fiche.getPrenom() != null || !fiche.getPrenom().isEmpty()) ficheU.setPrenom(fiche.getPrenom());
-
-        else if(fiche.getEmail() != null || !fiche.getEmail().isEmpty()) ficheU.setEmail(fiche.getEmail());
-
-        else if(fiche.getAdresse() != null || !fiche.getAdresse().isEmpty()) ficheU.setAdresse(fiche.getAdresse());
-
-        else if(fiche.getAllergie() != null || !fiche.getAllergie().isEmpty()) ficheU.setAllergie(fiche.getAllergie());
-
-        else if(fiche.getGroupe() != null || !fiche.getGroupe().isEmpty()) ficheU.setGroupe(fiche.getGroupe());
 
         return ficheRepository.saveAndFlush(ficheU);
     }
