@@ -19,7 +19,7 @@ public class Contact {
     private String nom;
     private String prenom;
 
-    @NotBlank
+
     @Column(length = 8)
     private String numero;
     private String email;

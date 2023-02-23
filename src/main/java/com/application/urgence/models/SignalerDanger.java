@@ -19,6 +19,7 @@ public class SignalerDanger {
     private Date date = new Date();
     private double longitude;
     private double latitude;
+    private String adresse;
 
 
     @ManyToOne

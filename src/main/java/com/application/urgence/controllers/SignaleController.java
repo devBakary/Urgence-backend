@@ -45,7 +45,7 @@ public class SignaleController {
         signalerDanger.setEntite(ett);
         Notification notif = new Notification();
 
-        notif.setMessage("Un nouveau signale de "+ signalerDanger.getEntite().getNom() + " en provenance de  " + signalerDanger.getUser().getNumero() + " à l'adresse " + signalerDanger.getUser().getAdresse());
+        notif.setMessage("Un nouveau signale de "+ signalerDanger.getEntite().getNom() + " en provenance du numero " + signalerDanger.getUser().getNumero() + " à l'adresse " + signalerDanger.getAdresse());
         notificationRepository.save(notif);
         return signaleService.ajouter(signalerDanger);
     }
