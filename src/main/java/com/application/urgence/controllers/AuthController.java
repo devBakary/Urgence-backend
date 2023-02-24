@@ -1,5 +1,6 @@
 package com.application.urgence.controllers;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -17,6 +18,7 @@ import com.application.urgence.repository.FicheRepository;
 import com.application.urgence.repository.RoleRepository;
 import com.application.urgence.repository.UserRepository;
 import com.application.urgence.security.EmailConstructor;
+import com.application.urgence.security.FileUploadUtil;
 import com.application.urgence.security.jwt.JwtUtils;
 import com.application.urgence.security.services.UserDetailsImpl;
 import com.application.urgence.security.services.UserService;
@@ -24,6 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -35,6 +38,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials="true")
 @RestController
@@ -210,24 +214,23 @@ public class AuthController {
 
 
     if (signupRequest != null) {
-      if (signupRequest.getUsername() != null) {
+      if (signupRequest.getUsername() != null && !signupRequest.getUsername().trim().equals("")) {
         userU.setUsername(signupRequest.getUsername());
       }
-      else{
-        userU.setUsername(userU.getUsername());
-      }
-      if (signupRequest.getEmail() != null) {
+
+      if (signupRequest.getEmail() != null && !signupRequest.getEmail().trim().equals("")) {
         userU.setEmail(signupRequest.getEmail());
       }
-      if (signupRequest.getNumero() != null) {
+
+      if (signupRequest.getNumero() != null && !signupRequest.getNumero().equals("")) {
         userU.setNumero(signupRequest.getNumero());
       }
-      if (signupRequest.getAdresse() != null) {
+      if (signupRequest.getAdresse() != null && !signupRequest.getAdresse().trim().equals("")) {
         userU.setAdresse(signupRequest.getAdresse());
       }
-      if (signupRequest.getPassword() != null) {
+      /*if (signupRequest.getPassword() != null) {
         userU.setPassword(encoder.encode(signupRequest.getPassword()));
-      }
+      }*/
     }
 
 
@@ -309,6 +312,23 @@ public class AuthController {
       }
         return new ResponseEntity<>(" Incorrect Mot de passe !", HttpStatus.BAD_REQUEST);
 
+  }
+
+
+  //pour mettre ajour le profil
+  @PutMapping("/image/{id}")
+  public String upImg(@Param("img")MultipartFile img, Long id) throws IOException {
+    User us = userRepository.findById(id).get();
+    User upIm = new User();
+    String imge = us.getUsername() +img.getOriginalFilename();
+    if (us.getImg() != null){
+      upIm.setImg(imge);
+    }
+    userRepository.saveAndFlush(upIm);
+    String upload = "C:\\Users\\bddiakite\\Desktop\\urgence-projet\\assets\\images";
+    FileUploadUtil.saveFile(upload, imge, img);
+
+    return "modifier avec s";
   }
 
 }
