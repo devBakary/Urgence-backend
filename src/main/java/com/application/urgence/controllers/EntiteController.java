@@ -62,8 +62,8 @@ public class EntiteController {
 
             notif.setMessage("Une nouvelle entite "+ entite.getNom() + " vient d'être créer, le numero est " + entite.getNumero());
              notificationRepository.save(notif);
-            String uploadDir = "C:\\Users\\bddiakite\\Desktop\\urgence-projet\\assets\\images";
-            String upload = "C:\\Users\\bddiakite\\Desktop\\urgence-projet\\assets\\audios";
+            String uploadDir = "C:\\Users\\Yng tech\\Desktop\\Urgence-Frontend\\assets\\images";
+            String upload = "C:\\Users\\Yng tech\\Desktop\\Urgence-Frontend\\assets\\audios";
             FileUploadUtil.saveFile(uploadDir, imge, img);
             FileUploadUtil.saveFile(upload, audi, audio);
              return "entite creer avec succes!";

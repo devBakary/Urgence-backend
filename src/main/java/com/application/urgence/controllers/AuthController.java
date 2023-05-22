@@ -101,10 +101,13 @@ public class AuthController {
       return ResponseEntity
               .badRequest()
               .body("Cet utilisateur existe deja! Choisissez un autre");
-    }else if (signUpRequest.getEmail() != null && userRepository.existsByEmail(signUpRequest.getEmail())){
+    }else if (signUpRequest.getEmail() != null && !signUpRequest.getEmail().isEmpty() && userRepository.existsByEmail(signUpRequest.getEmail())){
       return ResponseEntity.badRequest()
               .body("Cet Email est deja utilisé");
-    }else if(userRepository.existsByNumero(signUpRequest.getNumero())){
+    }else if(signUpRequest.getEmail().isEmpty()){
+      signUpRequest.setEmail(null);
+    }
+    else if(userRepository.existsByNumero(signUpRequest.getNumero())){
       return ResponseEntity.badRequest()
               .body("Cet Numero a deja un compte");
     }
@@ -191,7 +194,6 @@ public class AuthController {
       Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
           .orElseThrow(() -> new RuntimeException("Error: Role non trouvé"));
       roles.add(adminRole);
-      System.out.println("la ficheeeeeeeeee");
 
 
     user.setRoles(roles);

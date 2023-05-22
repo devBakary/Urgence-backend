@@ -28,7 +28,7 @@ public class User {
   private String username;
 
   @Size(max = 50)
-  @Email
+ // @Email
   @Column(nullable = true)
   private String email;
 
