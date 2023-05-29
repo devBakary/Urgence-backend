@@ -1,7 +1,9 @@
 package com.application.urgence.security.services;
 
 import com.application.urgence.models.Forum;
+import com.application.urgence.models.User;
 import com.application.urgence.repository.ForumRepository;
+import com.application.urgence.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,9 +16,13 @@ public class ForumServiceImpl implements ForumService{
 
 
     private ForumRepository forumRepository;
+    final private UserRepository userRepository;
+    final private GesteService gesteService;
 
     @Override
-    public Forum addForum(Forum forum) {
+    public Forum addForum(Forum forum, User user) {
+        User users = userRepository.findById(user.getId()).get();
+        forum.setUser(users);
         return forumRepository.save(forum);
     }
 
@@ -29,6 +35,11 @@ public class ForumServiceImpl implements ForumService{
 
     @Override
     public List<Forum> list() {
+        return forumRepository.findAll();
+    }
+
+    @Override
+    public List<Forum> listForumByIdUser(Long id) {
         return forumRepository.findAll();
     }
 

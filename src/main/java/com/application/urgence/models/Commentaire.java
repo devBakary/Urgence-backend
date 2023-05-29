@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -19,4 +16,16 @@ public class Commentaire {
     @Id
     private Long id;
     private String message;
+
+    @ManyToOne
+    @JoinColumn(name = "iduser")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "idforum")
+    private Forum forum;
+
+    @ManyToOne
+    @JoinColumn(name = "idlike")
+    private Like like;
 }
