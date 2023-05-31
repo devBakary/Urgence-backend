@@ -16,14 +16,22 @@ import java.util.List;
 public class ForumController {
 
     @Autowired
-     private ForumService forumService;
+    ForumService forumService;
 
     @Autowired
     GesteService gesteService;
 
+    @Autowired
+    ForumRepository forumRepository;
+
     @PostMapping("/add/{user}")
     public Forum addForum(@RequestBody Forum forum, @PathVariable User user){
         return forumService.addForum(forum, user);
+    }
+
+    @PutMapping("/update/{id}")
+    public Forum update(@RequestBody Forum forum, @PathVariable Long id){
+        return forumService.updateForum(forum, id);
     }
 
     @GetMapping("/liste")
@@ -34,7 +42,7 @@ public class ForumController {
     @GetMapping("/liste/{id}")
     public List<Forum> listForumByIdUser(@PathVariable Long id){
         User us = gesteService.userParId(id);
-        return forumService.listForumByIdUser(us.getId());
+        return forumRepository.findForumByUserId(us.getId());
     }
 
     @DeleteMapping("/delete/{id}")

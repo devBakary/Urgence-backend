@@ -13,7 +13,5 @@ public interface ForumService {
 
     List<Forum> list();
 
-    List<Forum> listForumByIdUser(Long id);
-
     String delete(Long id);
 }

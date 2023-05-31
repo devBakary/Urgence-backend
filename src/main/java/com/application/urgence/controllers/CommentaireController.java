@@ -22,7 +22,7 @@ public class CommentaireController {
         return commentaireService.add(commentaire, forum, user);
     }
 
-    @PutMapping("/commentaire/{id}")
+    @PutMapping("/update/{id}")
     public Commentaire update(@RequestBody Commentaire commentaire, @PathVariable Long id){
         return commentaireService.update(commentaire, id);
     }

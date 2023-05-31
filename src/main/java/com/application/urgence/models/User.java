@@ -1,5 +1,6 @@
 package com.application.urgence.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.util.HashSet;
@@ -39,7 +40,6 @@ public class User {
 
   private String adresse;
 
-
   @NotBlank
   @Size(max = 120)
   private String password;
@@ -49,6 +49,10 @@ public class User {
         joinColumns = @JoinColumn(name = "user_id"), 
         inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles = new HashSet<>();
+
+  @JsonIgnore
+  @OneToOne
+  private Likees likes;
 
   public User() {
   }

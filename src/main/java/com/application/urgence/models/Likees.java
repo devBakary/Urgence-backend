@@ -1,5 +1,6 @@
 package com.application.urgence.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,14 +11,19 @@ import javax.persistence.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Like {
+public class Likees {
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
-    private boolean like;
-    private boolean deslike;
+    private boolean isLike = false;
+    private boolean isDislike = false;
 
+    @JsonIgnore
     @OneToOne
-    @JoinColumn(name = "iduser")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "idcom")
+    private Commentaire commentaire;
 }

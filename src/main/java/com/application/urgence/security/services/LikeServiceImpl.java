@@ -1,7 +1,7 @@
 package com.application.urgence.security.services;
 
 import com.application.urgence.models.Commentaire;
-import com.application.urgence.models.Like;
+import com.application.urgence.models.Likees;
 import com.application.urgence.models.User;
 import com.application.urgence.repository.CommentaireRepository;
 import com.application.urgence.repository.LikeRepository;
@@ -20,25 +20,35 @@ public class LikeServiceImpl implements LikeService{
     final private CommentaireRepository commentaireRepository;
 
     @Override
-    public Like add(Like like, Commentaire commentaire, User user) {
+    public Likees add(Likees like, Commentaire commentaire, User user) {
         User users = userRepository.findById(user.getId()).get();
         Commentaire com = commentaireRepository.findById(commentaire.getId()).get();
         like.setUser(users);
+        like.setCommentaire(com);
         return likeRepository.save(like);
     }
 
     @Override
-    public Like update(Like like, Long id) {
-        Like likes = likeRepository.findById(like.getId()).get();
-        if (likes.isLike()){
-
+    public Likees update(Likees like, Long id) {
+        Likees likes = likeRepository.findById(like.getId()).get();
+        if (likes.isLike() && !likes.isDislike()){
+            likes.setLike(false);
+            return likeRepository.saveAndFlush(likes);
+        }
+        if(!likes.isLike() && likes.isDislike()){
+            likes.setDislike(false);
+            return likeRepository.saveAndFlush(likes);
+        }
+        if(!likes.isLike() && !likes.isDislike()){
+            likes.setDislike(true);
+            return likeRepository.saveAndFlush(likes);
+        }
+        if(!likes.isLike() && !likes.isDislike()){
+            likes.setLike(true);
+            return likeRepository.saveAndFlush(likes);
         }
         return null;
     }
 
-    @Override
-    public List<Like> list() {
-        return likeRepository.findAll();
-    }
 
 }

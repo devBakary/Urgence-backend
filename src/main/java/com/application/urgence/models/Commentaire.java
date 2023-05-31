@@ -25,7 +25,4 @@ public class Commentaire {
     @JoinColumn(name = "idforum")
     private Forum forum;
 
-    @ManyToOne
-    @JoinColumn(name = "idlike")
-    private Like like;
 }

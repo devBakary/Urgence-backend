@@ -39,11 +39,6 @@ public class ForumServiceImpl implements ForumService{
     }
 
     @Override
-    public List<Forum> listForumByIdUser(Long id) {
-        return forumRepository.findAll();
-    }
-
-    @Override
     public String delete(Long id) {
         Forum forum1 = forumRepository.findById(id).get();
         forumRepository.deleteById(forum1.getId());
