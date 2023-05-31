@@ -53,7 +53,7 @@ public class TypeViolenceServiceImpl implements TypeViolenceService {
     public Type_violence modifierEtats(Long id) {
         Type_violence type_violence1 = typeViolenceRepository.findById(id).get();
         type_violence1.setEtat(true);
-     //   type_violence1.setDate(new Date());
+        //   type_violence1.setDate(new Date());
         return typeViolenceRepository.save(type_violence1);
     }
 
@@ -73,12 +73,14 @@ public class TypeViolenceServiceImpl implements TypeViolenceService {
             this.typeViolenceManager = typeViolenceManager;
         }
 
-        @Scheduled(cron = "0 59 1 * * ?") // Exécution quotidienne à minuit
+        @Scheduled(cron = "0 59 2 * * ?") // Exécution quotidienne à 01h40
         public void verifierEtSupprimerTypeViolence() {
             List<Type_violence> typeViolences = typeViolenceManager.getTypeViolences();
 
             for (Type_violence typeViolence : typeViolences) {
-                typeViolenceManager.verifierEtSupprimerTypeViolence(typeViolence);
+                if (!typeViolence.getEtat()) {
+                    typeViolenceManager.verifierEtSupprimerTypeViolence(typeViolence);
+                }
             }
         }
     }
@@ -98,13 +100,18 @@ public class TypeViolenceServiceImpl implements TypeViolenceService {
         }
 
         public void verifierEtSupprimerTypeViolence(Type_violence typeViolence) {
-            Date currentDate = new Date();
-            long difference = currentDate.getTime() - typeViolence.getDate().getTime();
-            long thirtyDaysInMillis = 30 * 24 * 60 * 60 * 1000;
+            if (!typeViolence.getEtat()) {
+                Date currentDate = new Date();
+                long difference = currentDate.getTime() - typeViolence.getDate().getTime();
+                long thirtyDaysInMillis = 30 * 24 * 60 * 60 * 1000;
 
-            if (difference >= thirtyDaysInMillis && !typeViolence.getEtat()) {
-                typeViolenceRepository.delete(typeViolence);
+                if (difference >= thirtyDaysInMillis) {
+                    typeViolenceRepository.delete(typeViolence);
+                }
             }
         }
+
+
+
     }
 }
