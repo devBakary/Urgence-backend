@@ -73,7 +73,7 @@ public class TypeViolenceServiceImpl implements TypeViolenceService {
             this.typeViolenceManager = typeViolenceManager;
         }
 
-        @Scheduled(cron = "0 59 2 * * ?") // Exécution quotidienne à 01h40
+        @Scheduled(cron = "0 0 0 * * ?") // Exécution quotidienne à 01h40
         public void verifierEtSupprimerTypeViolence() {
             List<Type_violence> typeViolences = typeViolenceManager.getTypeViolences();
 
