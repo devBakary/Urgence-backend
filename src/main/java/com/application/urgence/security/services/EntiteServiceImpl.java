@@ -32,8 +32,6 @@ public class EntiteServiceImpl implements EntiteService{
         entiteU.setNom(entite.getNom());
         entiteU.setNumero(entite.getNumero());
         entiteU.setImg(entite.getImg());
-
-
         return entiteRepository.saveAndFlush(entiteU);
     }
 

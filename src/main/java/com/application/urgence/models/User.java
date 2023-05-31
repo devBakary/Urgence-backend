@@ -1,6 +1,8 @@
 package com.application.urgence.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,7 +14,8 @@ import javax.validation.constraints.Size;
 
 @Data
 @Entity
-@Table(name = "users", 
+@AllArgsConstructor
+@Table(name = "users",
     uniqueConstraints = { 
       @UniqueConstraint(columnNames = "username"),
       //@UniqueConstraint(columnNames = "email")
@@ -63,6 +66,9 @@ public class User {
     this.adresse = adresse;
   }
 
+  public User(Long id) {
+    this.id=id;
+  }
 
 
   public Long getId() {

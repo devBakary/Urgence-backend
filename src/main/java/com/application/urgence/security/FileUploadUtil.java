@@ -26,4 +26,5 @@ public class FileUploadUtil {
             throw new IOException("Ne peut pas enregistrer ce fichier: " + fileName, ioe);
         }
     }
+
 }

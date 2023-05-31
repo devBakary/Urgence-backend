@@ -40,7 +40,6 @@ public class ContactController {
 
     @PutMapping("/modifier/{id}")
     public Contact modifier(@PathVariable Long id, @RequestBody Contact contact){
-
         return contactService.modifier(id, contact);
     }
 
