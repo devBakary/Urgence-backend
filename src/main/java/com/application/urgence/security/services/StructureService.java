@@ -1,6 +1,5 @@
 package com.application.urgence.security.services;
 
-import com.application.urgence.message.Message;
 import com.application.urgence.models.Structure;
 
 
@@ -11,7 +10,13 @@ public interface StructureService {
 
     List<Structure> liste();
 
-    Structure modifier(Structure structure, Long id);
+    List<Structure> liste1();
+
+    Object modifier(Structure structure, Long id);
 
     String supprimer(Long id);
+
+    Structure modifierEtat(Long id);
+
+    Structure modifierEtats(Long id);
 }

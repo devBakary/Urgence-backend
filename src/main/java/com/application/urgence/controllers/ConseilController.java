@@ -17,6 +17,9 @@ public class ConseilController {
 
     @Autowired
     ConseilService conseilService;
+
+    // Methode post de creation de conseil sur une structure
+
     @PostMapping("/creer/{iduser}/{idstruct}")
     public Object creer(@PathVariable Long iduser, @PathVariable Long idstruct, @RequestBody Conseil conseil){
         if (conseil.getLibelle().isEmpty()) {
@@ -29,16 +32,26 @@ public class ConseilController {
         return Message.set("Avis poster avec succès",true);
     }
 
+    // Methode get de d'affichage de conseil sur une structure
+
     @GetMapping("/liste")
     public List<Conseil> liste(){
 
         return conseilService.liste();
     }
 
+    // Methode put de modification de conseil sur une structure
+
     @PutMapping("/modifier/{id}")
     public Object modifier(@PathVariable Long id, @RequestBody Conseil conseil){
         conseilService.modifier(id,conseil);
         return Message.set("Modifier avec succès",true);
     }
+    // Methode delete de suppression de conseil sur une structure
+    @DeleteMapping("/supprimer/{id}")
+    public Object supprimer(@PathVariable Long id){
+        return conseilService.supprimer(id);
+    }
+
 
 }

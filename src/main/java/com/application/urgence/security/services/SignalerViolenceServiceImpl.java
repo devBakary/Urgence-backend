@@ -12,16 +12,20 @@ import java.util.List;
 public class SignalerViolenceServiceImpl implements SignalerViolenceService{
     @Autowired
     SignalerViolenceRepository signalerViolenceRepository;
+
+    // Creation de signaler violence
     @Override
     public SignalerViolence creer(SignalerViolence signalerViolence) {
         return signalerViolenceRepository.save(signalerViolence);
     }
 
+    // Affichage des signalement de violence
     @Override
     public List<SignalerViolence> liste() {
         return signalerViolenceRepository.findAll();
     }
 
+    //Methode de modification
     @Override
     public SignalerViolence modifier(SignalerViolence signalerViolence, Long id) {
         SignalerViolence signalerViolence1 = signalerViolenceRepository.findById(id).get();
@@ -29,8 +33,11 @@ public class SignalerViolenceServiceImpl implements SignalerViolenceService{
         return signalerViolenceRepository.save(signalerViolence1);
     }
 
+    // Methode de suppression
     @Override
-    public String supprimer(Long id) {
-        return null;
+    public Message supprimer(Long id) {
+        signalerViolenceRepository.deleteById(id);
+        return (Message) Message.set("Message supprimé avec succès",true);
+
     }
 }

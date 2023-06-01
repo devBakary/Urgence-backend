@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
@@ -17,12 +20,12 @@ public class Structure {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
     private String nom;
     private String localite;
-    @Column(unique = true)
     private String numero;
     private Boolean etat=true;
+    private Date date = new Date();
+
 
     @ManyToOne
     @JoinColumn(name = "iduser")

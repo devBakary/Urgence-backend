@@ -9,5 +9,5 @@ public interface ConseilService {
     Conseil creer(Conseil conseil);
     List<Conseil> liste();
     Conseil modifier(Long id,Conseil conseil);
-    String supprimer(Long id);
+    Message supprimer(Long id);
 }

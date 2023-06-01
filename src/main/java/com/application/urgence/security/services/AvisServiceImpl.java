@@ -30,7 +30,8 @@ public class AvisServiceImpl implements AvisService{
     }
 
     @Override
-    public String supprimer(Long id) {
-        return null;
+    public Message supprimer(Long id) {
+        avisRepository.deleteById(id);
+        return (Message) Message.set("Avis supprimé avec succès",true);
     }
 }

@@ -1,17 +1,15 @@
 package com.application.urgence.security.services;
 
+
 import com.application.urgence.models.Type_violence;
 import com.application.urgence.repository.SignalerViolenceRepository;
 import com.application.urgence.repository.TypeViolenceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class TypeViolenceServiceImpl implements TypeViolenceService {
@@ -29,8 +27,20 @@ public class TypeViolenceServiceImpl implements TypeViolenceService {
 
     @Override
     public List<Type_violence> liste() {
-        return typeViolenceRepository.findAll();
+        List<Type_violence> typeViolences = typeViolenceRepository.findAll();
+        List<Type_violence> activeTypeViolences = new ArrayList<>();
+
+        for (Type_violence type_violence : typeViolences) {
+            if (type_violence.getEtat()) {
+                activeTypeViolences.add(type_violence);
+            }
+        }
+
+        return activeTypeViolences;
     }
+
+
+
 
     @Override
     public Type_violence modifier(Type_violence type_violence, Long id) {
@@ -62,56 +72,4 @@ public class TypeViolenceServiceImpl implements TypeViolenceService {
         return null;
     }
 
-    @EnableScheduling
-    @Component
-    public class TypeViolenceScheduler {
-
-        private TypeViolenceManager typeViolenceManager; // Injecter le manager
-
-        @Autowired
-        public TypeViolenceScheduler(TypeViolenceManager typeViolenceManager) {
-            this.typeViolenceManager = typeViolenceManager;
-        }
-
-        @Scheduled(cron = "0 0 0 * * ?") // Exécution quotidienne à 01h40
-        public void verifierEtSupprimerTypeViolence() {
-            List<Type_violence> typeViolences = typeViolenceManager.getTypeViolences();
-
-            for (Type_violence typeViolence : typeViolences) {
-                if (!typeViolence.getEtat()) {
-                    typeViolenceManager.verifierEtSupprimerTypeViolence(typeViolence);
-                }
-            }
-        }
-    }
-
-    @Component
-    public class TypeViolenceManager {
-
-        private TypeViolenceRepository typeViolenceRepository; // Injecter le repository
-
-        @Autowired
-        public TypeViolenceManager(TypeViolenceRepository typeViolenceRepository) {
-            this.typeViolenceRepository = typeViolenceRepository;
-        }
-
-        public List<Type_violence> getTypeViolences() {
-            return typeViolenceRepository.findAll();
-        }
-
-        public void verifierEtSupprimerTypeViolence(Type_violence typeViolence) {
-            if (!typeViolence.getEtat()) {
-                Date currentDate = new Date();
-                long difference = currentDate.getTime() - typeViolence.getDate().getTime();
-                long thirtyDaysInMillis = 30 * 24 * 60 * 60 * 1000;
-
-                if (difference >= thirtyDaysInMillis) {
-                    typeViolenceRepository.delete(typeViolence);
-                }
-            }
-        }
-
-
-
-    }
 }

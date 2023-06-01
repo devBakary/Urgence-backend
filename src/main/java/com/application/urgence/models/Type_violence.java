@@ -30,7 +30,7 @@ public class Type_violence {
     @JoinTable(	name = "type_violence_structure",
             joinColumns = @JoinColumn(name = "idtype_violence"),
             inverseJoinColumns = @JoinColumn(name = "idstructure"))
-    private Set<Structure> struture = new HashSet<>();
+    private Set<Structure> strutures = new HashSet<>();
 
 
     public Type_violence(Long idtype) {

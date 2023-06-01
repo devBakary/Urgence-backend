@@ -13,5 +13,5 @@ public interface AvisService {
 
     Avis modifier(Avis avis, Long id);
 
-    String supprimer(Long id);
+    Message supprimer(Long id);
 }

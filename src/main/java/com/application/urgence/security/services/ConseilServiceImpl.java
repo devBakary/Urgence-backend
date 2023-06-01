@@ -31,7 +31,8 @@ public class ConseilServiceImpl implements ConseilService{
     }
 
     @Override
-    public String supprimer(Long id) {
-        return null;
+    public Message supprimer(Long id) {
+        conseilRepository.deleteById(id);
+        return (Message) Message.set("Conseil supprimé avec succès",true);
     }
 }

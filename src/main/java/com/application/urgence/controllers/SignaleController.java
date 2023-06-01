@@ -22,6 +22,7 @@ import java.util.List;
 @RequestMapping("/urgence/signale")
 public class SignaleController {
 
+
     @Autowired
     SignaleService signaleService;
 
@@ -37,8 +38,10 @@ public class SignaleController {
     @Autowired
     NotificationRepository notificationRepository;
 
+
     @PostMapping("/creer/{iduser}/{id}")
-    public SignalerDanger creer(@RequestBody SignalerDanger signalerDanger, @PathVariable Long iduser, @PathVariable Long id){
+    public SignalerDanger creer(@RequestBody SignalerDanger signalerDanger,
+                                @PathVariable Long iduser, @PathVariable Long id){
         User us = gesteService.userParId(iduser);
         Entite ett = entiteRepository.findById(id).get();
         signalerDanger.setUser(us);

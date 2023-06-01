@@ -12,5 +12,5 @@ public interface SignalerViolenceService {
 
     SignalerViolence modifier(SignalerViolence signalerViolence, Long id);
 
-    String supprimer(Long id);
+    Message supprimer(Long id);
 }
