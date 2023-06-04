@@ -2,8 +2,7 @@ package com.application.urgence.models;
 
 import lombok.Data;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -46,11 +45,23 @@ public class User {
 
   private String img ;
 
+  @OneToMany(mappedBy = "admin")
+  private Collection<Publication> validerPublications = new ArrayList<>();
+  @OneToMany(mappedBy = "utilisateur")
+  private Collection<Publication> publications = new ArrayList<>();
+  @OneToMany(mappedBy = "admin")
+  private Collection<DemandeAide> validerDemandeAide = new ArrayList<>();
+  @OneToMany(mappedBy = "utilisateur")
+  private Collection<DemandeAide> demandeAide = new ArrayList<>();
+
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(  name = "user_roles", 
         joinColumns = @JoinColumn(name = "user_id"), 
         inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles = new HashSet<>();
+
+
+
 
   public User() {
   }
