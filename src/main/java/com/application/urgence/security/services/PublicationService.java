@@ -12,5 +12,5 @@ public interface PublicationService {
     List<Publication> listerPublication(String type);
     List<Publication> listerPublicationParValidation(String type);
     String supprimerActiverOuDesactiverPublication(Long id, String type);
-    String validerDemandeAide(Long id, String type);
+    String validerPublication(Long id, String type);
 }

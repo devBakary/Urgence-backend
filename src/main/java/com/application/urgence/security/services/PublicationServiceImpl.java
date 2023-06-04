@@ -125,7 +125,7 @@ public class PublicationServiceImpl implements PublicationService {
 
     // Validation d'une publication
     @Override
-    public String validerDemandeAide(Long id, String type) {
+    public String validerPublication(Long id, String type) {
         Publication publication = publicationRepository.findById(id).orElseThrow(() -> new RuntimeException("Cette publication n'existe pas"));
         String message;
         GestionDate gestionDate = publication.getGestionDate();
