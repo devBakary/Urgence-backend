@@ -5,27 +5,22 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import java.util.Date;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Contact {
-
+public class SignalerViolence {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nom;
-    private String prenom;
-
-
-    @Column(length = 8)
-    private String numero;
-    private String email;
-    private String domicile;
-    private String lien;
-
+    private Date date = new Date();
+    private String message;
+    private Boolean etat=true;
+    @ManyToOne
+    @JoinColumn(name = "idtype_violence")
+    private Type_violence typeViolence;
 
     @ManyToOne
     @JoinColumn(name = "iduser")

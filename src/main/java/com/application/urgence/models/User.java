@@ -1,7 +1,10 @@
 package com.application.urgence.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,7 +16,8 @@ import javax.validation.constraints.Size;
 
 @Data
 @Entity
-@Table(name = "users", 
+@AllArgsConstructor
+@Table(name = "users",
     uniqueConstraints = { 
       @UniqueConstraint(columnNames = "username"),
       //@UniqueConstraint(columnNames = "email")
@@ -44,6 +48,8 @@ public class User {
   @Size(max = 120)
   private String password;
 
+  private String img ;
+
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(  name = "user_roles", 
         joinColumns = @JoinColumn(name = "user_id"), 
@@ -65,6 +71,9 @@ public class User {
     this.adresse = adresse;
   }
 
+  public User(Long id) {
+    this.id=id;
+  }
 
 
   public Long getId() {

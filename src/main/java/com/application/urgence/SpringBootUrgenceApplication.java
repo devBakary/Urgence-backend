@@ -60,8 +60,6 @@ public class SpringBootUrgenceApplication implements CommandLineRunner {
 					);
 			admin.setRoles(roles);
 			userRepository.save(admin);
-
-
 		}
 	}
 }

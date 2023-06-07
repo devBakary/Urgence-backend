@@ -5,29 +5,31 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Contact {
+public class Structure {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique = true)
     private String nom;
-    private String prenom;
-
-
-    @Column(length = 8)
+    private String localite;
+    @Column(unique = true)
     private String numero;
-    private String email;
-    private String domicile;
-    private String lien;
-
+    private Boolean etat=true;
 
     @ManyToOne
     @JoinColumn(name = "iduser")
     private User user;
+
+
+    public Structure(Long idstruct) {
+        this.id=idstruct;
+    }
 }

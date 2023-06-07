@@ -35,12 +35,24 @@ public class ContactServiceImpl implements ContactService{
 
         Contact contactU = contactRepository.findById(id).get();
 
-       contactU.setDomicile(contact.getDomicile());
-       contactU.setEmail(contact.getEmail());
-       contactU.setLien(contact.getLien());
-       contactU.setNom(contact.getNom());
-       contactU.setPrenom(contact.getPrenom());
-       contactU.setNumero(contact.getNumero());
+        if(!contact.getNom().trim().equals("") && contact.getNom() !=null){
+            contactU.setNom(contact.getNom());
+        }
+        if (!contact.getPrenom().trim().equals("") && contact.getPrenom() !=null){
+            contactU.setPrenom(contact.getPrenom());
+        }
+        if (!contact.getNumero().trim().equals("") && contact.getNumero() !=null){
+            contactU.setNumero(contact.getNumero());
+        }
+        if (!contact.getDomicile().trim().equals("") && contact.getDomicile() !=null){
+            contactU.setDomicile(contact.getDomicile());
+        }
+        if (!contact.getEmail().trim().equals("") && contact.getEmail() !=null){
+            contactU.setEmail(contact.getEmail());
+        }
+        if (!contact.getLien().trim().equals("") && contact.getLien() !=null){
+            contactU.setLien(contact.getLien());
+        }
 
        return contactRepository.saveAndFlush(contact);
     }

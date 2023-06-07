@@ -36,6 +36,7 @@ public class FicheController {
 
     @PutMapping("/modifier/{id}")
     public Fiche modifier(@RequestBody Fiche fiche, @PathVariable Long id){
+
         return ficheService.modifier(fiche, id);
     }
 

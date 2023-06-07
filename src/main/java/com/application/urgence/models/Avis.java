@@ -5,29 +5,27 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import java.util.Date;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Contact {
+public class Avis {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nom;
-    private String prenom;
+    private Date date = new Date();
+    private String message;
+    private Boolean etat=true;
 
-
-    @Column(length = 8)
-    private String numero;
-    private String email;
-    private String domicile;
-    private String lien;
-
+    @ManyToOne
+    @JoinColumn(name = "idstructure")
+    private Structure structure;
 
     @ManyToOne
     @JoinColumn(name = "iduser")
     private User user;
+
 }

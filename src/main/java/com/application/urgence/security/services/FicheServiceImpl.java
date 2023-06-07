@@ -28,12 +28,23 @@ public class FicheServiceImpl implements FicheService{
     @Override
     public Fiche modifier(Fiche fiche, Long id) {
         Fiche ficheU = ficheRepository.findById(id).get();
-        ficheU.setNom(fiche.getNom());
-        ficheU.setPrenom(fiche.getPrenom());
-        ficheU.setEmail(fiche.getEmail());
-        ficheU.setAdresse(fiche.getAdresse());
-        ficheU.setAllergie(fiche.getAllergie());
-        ficheU.setGroupe(fiche.getGroupe());
+        if(!fiche.getNom().trim().equals("")) {
+            ficheU.setNom(fiche.getNom());
+        }
+        if(!fiche.getPrenom().trim().equals("")){
+            ficheU.setPrenom(fiche.getPrenom());
+        }
+        if (!fiche.getAdresse().trim().equals("")){
+            ficheU.setAdresse(fiche.getAdresse());
+        }
+        if(!fiche.getGroupe().trim().equals("")){
+            ficheU.setGroupe(fiche.getGroupe());
+        }
+        if (!fiche.getAllergie().trim().equals("")){
+            ficheU.setAllergie(fiche.getAllergie());
+        }
+
+
         return ficheRepository.saveAndFlush(ficheU);
     }
 
