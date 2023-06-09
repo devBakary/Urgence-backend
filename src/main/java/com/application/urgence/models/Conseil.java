@@ -23,7 +23,4 @@ public class Conseil {
     @JoinColumn(name = "idstructure")
     private Structure structure;
 
-    @ManyToOne
-    @JoinColumn(name = "iduser")
-    private User user;
 }

@@ -20,16 +20,16 @@ public class ConseilController {
 
     // Methode post de creation de conseil sur une structure
 
-    @PostMapping("/creer/{iduser}/{idstruct}")
-    public Object creer(@PathVariable Long iduser, @PathVariable Long idstruct, @RequestBody Conseil conseil){
+    @PostMapping("/creer/{idstruct}")
+    public Object creer(@PathVariable Long idstruct, @RequestBody Conseil conseil){
         if (conseil.getLibelle().isEmpty()) {
             return Message.set("Veuillez remplir tous les champs", false);
         }
-        conseil.setUser(new User(iduser));
+
         conseil.setStructure(new Structure(idstruct));
 
         conseilService.creer(conseil);
-        return Message.set("Avis poster avec succès",true);
+        return Message.set("Conseil poster avec succès",true);
     }
 
     // Methode get de d'affichage de conseil sur une structure
